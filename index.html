@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Connect - Discover Content for Your Mood</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h3>About Creators</h3>
+        <div class="creator">
+            <img src="/Manish.jpg" alt="Manish Singh" class="creator-img">
+            <p><strong>Manish Singh</strong><br>BCA (Data Analytics)</p>
+        </div>
+        <div class="creator">
+            <img src="/Mayank.jpg" alt="Mayank Agarwal" class="creator-img">
+            <p><strong>Mayank Agarwal</strong><br>BCA (Cyber Security)</p>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Welcome to Emotion Connect!</h1>
+        <p>Please allow access to your camera or upload a photo to detect your current mood.</p>
+        <div class="options">
+            <button id="webcam-btn">Use Webcam</button>
+            <button id="upload-btn">Upload Photo</button>
+            <button id="manual-btn">Enter Mood Manually</button>
+        </div>
+        <div id="camera-container" style="display: none; position: relative;">
+            <video id="video" autoplay style="width: 100%; max-width: 400px; border-radius: 5px;"></video>
+            <canvas id="overlay" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
+            <button id="capture-btn">Capture</button>
+        </div>
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
+        <div id="manual-input" style="display: none;">
+            <h2>Select Your Mood Manually</h2>
+            <p>Learn more about mixed emotions and how your brain processes them <a href="https://dornsife.usc.edu/news/stories/mixed-emotions-how-your-brain-lets-you-experience-two-opposite-feelings-at-once/" target="_blank">here</a>.</p>
+            <p>Created by Manish Singh and Mayank Agarwal</p>
+            <div id="mood-radios">
+                <label><input type="radio" name="mood" value="happy"> Happy 😊</label>
+                <label><input type="radio" name="mood" value="sad"> Sad 😢</label>
+                <label><input type="radio" name="mood" value="angry"> Angry 😠</label>
+                <label><input type="radio" name="mood" value="fear"> Fear 😨</label>
+                <label><input type="radio" name="mood" value="surprise"> Surprise 😲</label>
+                <label><input type="radio" name="mood" value="disgust"> Disgust 🤢</label>
+                <label><input type="radio" name="mood" value="neutral"> Neutral 😐</label>
+            </div>
+            <button id="submit-mood">Submit Mood</button>
+            <button id="back-to-home-manual">Back to Home</button>
+        </div>
+        <div id="mood-display" style="display: none;">
+            <h2>You seem <span id="detected-mood"></span>! What would you like today?</h2>
+            <div class="content-options">
+                <button class="content-btn" data-type="jokes">Jokes</button>
+                <button class="content-btn" data-type="shayari">Shayari</button>
+                <button class="content-btn" data-type="songs">Songs</button>
+            </div>
+            <button id="back-to-home">Back to Home</button>
+        </div>
+        <div id="recommendations" style="display: none;">
+            <h3>Here are some recommendations:</h3>
+            <ul id="content-list"></ul>
+            <button id="back-btn">Back to Mood Selection</button>
+            <button id="back-to-home-rec">Back to Home</button>
+        </div>
+    </div>
+    <footer class="footer">
+        <p># Emotion Connect. Built with ❤️ for better mental health.</p>
+        <p>Learn more about <a href="https://dornsife.usc.edu/news/stories/mixed-emotions-how-your-brain-lets-you-experience-two-opposite-feelings-at-once/" target="_blank">mixed emotions</a>.</p>
+    </footer>
+
+    <!-- Chatbox Toggle Button -->
+    <button id="chatbox-toggle-btn">💬</button>
+
+    <!-- Chatbox -->
+    <div id="chatbox" class="chatbox">
+        <div class="chatbox-header">
+            <span>Chat with Emotion Buddy</span>
+            <button id="chatbox-toggle" class="chatbox-toggle">×</button>
+        </div>
+        <div class="chatbox-body">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Type your message..." class="chat-input">
+                <button id="chat-send" class="chat-send">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
