@@ -8,8 +8,10 @@ import openai
 
 app = Flask(__name__)
 
-# Set OpenAI API key (hardcoded for functionality; consider using environment variable in production)
-openai.api_key = "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"
+# Load OpenAI API key from environment variable
+api_key = os.getenv('OPENAI_API_KEY')
+if not api_key:
+    print("Warning: OPENAI_API_KEY not set. AI features will not work. Set it in .env or environment variables.")
 
 # Serve static files
 @app.route('/')
@@ -70,10 +72,10 @@ def generate_content():
         mood = data['mood']
         content_type = data['type']
 
-        if not openai.api_key:
+        if not api_key:
             return jsonify({'error': 'OpenAI API key not configured'}), 500
 
-        client = openai.OpenAI(api_key=openai.api_key)
+        client = openai.OpenAI(api_key=api_key, proxies=None)
 
         if content_type == 'jokes':
             prompt = f"Generate exactly 3 original, short, funny jokes suitable for someone feeling {mood}. Do not use any pre-existing, common, or known jokes; create completely new ones from scratch. Format strictly as a numbered list: 1. [Joke one]. 2. [Joke two]. 3. [Joke three]."
@@ -120,10 +122,10 @@ def chat():
         mood = data.get('mood', 'neutral')
         user_message = data.get('message', '')
 
-        if not openai.api_key:
+        if not api_key:
             return jsonify({'error': 'OpenAI API key not configured'}), 500
 
-        client = openai.OpenAI(api_key=openai.api_key)
+        client = openai.OpenAI(api_key=api_key, proxies=None)
 
         prompt = f"You are an empathetic AI friend helping someone who is feeling {mood}. Respond in a supportive, understanding way. Keep responses concise (under 100 words) and focus on emotional support, advice, or light conversation. Current mood: {mood}. User message: {user_message}"
 
