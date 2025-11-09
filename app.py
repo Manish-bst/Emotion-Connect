@@ -8,10 +8,8 @@ import openai
 
 app = Flask(__name__)
 
-# Load OpenAI API key from environment variable
-api_key = os.getenv('OPENAI_API_KEY')
-if not api_key:
-    print("Warning: OPENAI_API_KEY not set. AI features will not work. Set it in .env or environment variables.")
+# Set OpenAI API key from environment variable
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # Serve static files
 @app.route('/')
@@ -72,10 +70,10 @@ def generate_content():
         mood = data['mood']
         content_type = data['type']
 
-        if not api_key:
+        if not openai.api_key:
             return jsonify({'error': 'OpenAI API key not configured'}), 500
 
-        client = openai.OpenAI(api_key=api_key, proxies=None)
+        client = openai.OpenAI(api_key=openai.api_key)
 
         if content_type == 'jokes':
             prompt = f"Generate exactly 3 original, short, funny jokes suitable for someone feeling {mood}. Do not use any pre-existing, common, or known jokes; create completely new ones from scratch. Format strictly as a numbered list: 1. [Joke one]. 2. [Joke two]. 3. [Joke three]."
@@ -122,10 +120,10 @@ def chat():
         mood = data.get('mood', 'neutral')
         user_message = data.get('message', '')
 
-        if not api_key:
+        if not openai.api_key:
             return jsonify({'error': 'OpenAI API key not configured'}), 500
 
-        client = openai.OpenAI(api_key=api_key, proxies=None)
+        client = openai.OpenAI(api_key=openai.api_key)
 
         prompt = f"You are an empathetic AI friend helping someone who is feeling {mood}. Respond in a supportive, understanding way. Keep responses concise (under 100 words) and focus on emotional support, advice, or light conversation. Current mood: {mood}. User message: {user_message}"
 

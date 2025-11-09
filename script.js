@@ -3,121 +3,7 @@ let lastDetectedMood = '';
 let detectionInterval = null;
 let modelsLoaded = false;
 
-// Static content fallback (enhanced relatable content with valid links)
-const content = {
-    happy: {
-        jokes: [
-            "Why don't scientists trust atoms? Kyun ki woh sab kuch banate hain, lekin kabhi credit nahi lete! 😄🔬",
-            "Mera computer break mang raha tha, toh maine Kit-Kat di - ab woh mujhe chocolates bhej raha hai! 😂💻",
-            "Cycle kyun gir gayi? Kyun ki woh two-tired thi, aur ek wheel pe kaam kar rahi thi! 🚲😆"
-        ],
-        shayari: [
-            "Hansi ki baarish, dil ko bhigo de, khushi ka jadoo, har ghum bhula de. 😊🌈",
-            "Muskan ki kiran, andhere ko mitaye, zindagi ka rang, naye rang bharaaye. ✨😂"
-        ],
-        songs: [
-            "Badtameez Dil - Yeh Jawaani Hai Deewani (https://www.youtube.com/watch?v=II2EO3Nw4m0&list=RDII2EO3Nw4m0&start_radio=1&pp=ygUnQmFkdGFtZWV6IERpbCAtIFllaCBKYXdhYW5pIEhhaSBEZWV3YW5poAcB)",
-            "Gallan Goodiyaan - Dil Dhadakne Do (https://www.youtube.com/watch?v=jCEdTq3j-0U&list=RDjCEdTq3j-0U&start_radio=1&pp=ygUiR2FsbGFuIEdvb2RpeWFhbiAtIERpbCBEaGFkYWtuZSBEb6AHAQ%3D%3D)",
-            "London Thumakda - Queen (https://www.youtube.com/watch?v=udra3Mfw2oo&list=RDudra3Mfw2oo&start_radio=1&pp=ygUXTG9uZG9uIFRodW1ha2RhIC0gUXVlZW6gBwE%3DU)"
-        ]
-    },
-    sad: {
-        jokes: [
-            "Scarecrow ko award mila kyun? Kyun ki woh outstanding tha, field mein khada reh kar! 🌾😔",
-            "Fake spaghetti ko kya kehte hain? An impasta - aur woh bhi jail mein hai! 🍝😢",
-            "Skeletons kyun nahi ladte? Kyun ki unke paas guts hi nahi hain, sirf bones! 💀😞"
-        ],
-        shayari: [
-            "Aansoon ki boondein, dil se tapke, gham ki yaadein, mann ko sataye. 😢💧",
-            "Dard ki raah mein, akela chalun, khushi ka intezaar, kabhi na aaye. 💔🌧️"
-        ],
-        songs: [
-            "Tum Hi Ho - Aashiqui 2 (https://www.youtube.com/watch?v=IJq0yyWug1k&list=RDIJq0yyWug1k&start_radio=1&pp=ygUWVHVtIEhpIEhvIC0gQWFzaGlxdWkgMqAHAdIHCQkDCgGHKiGM7w%3D%3D)",
-            "Channa Mereya - Ae Dil Hai Mushkil (https://www.youtube.com/watch?v=284Ov7ysmfA&list=RD284Ov7ysmfA&start_radio=1&pp=ygUiQ2hhbm5hIE1lcmV5YSAtIEFlIERpbCBIYWkgTXVzaGtpbKAHAQ%3D%3D)",
-            "Samjhawan - Humpty Sharma Ki Dulhania (https://www.youtube.com/watch?v=H2f7MZaw3Yo&list=RDH2f7MZaw3Yo&start_radio=1&pp=ygUlU2Ftamhhd2FuIC0gSHVtcHR5IFNoYXJtYSBLaSBEdWxoYW5pYaAHAQ%3D%3D)"
-        ]
-    },
-    angry: {
-        jokes: [
-            "Math book sad kyun tha? Kyun ki uske paas too many problems the, aur solutions kam! 📚😠",
-            "Toothless bear ko kya kehte hain? Gummy bear - woh bhi chocolate wala! 🐻🍫🤬",
-            "Golfer ne do pants kyun pehni? Kyun ki ek mein hole in one tha! ⛳😡"
-        ],
-        shayari: [
-            "Gusse ki aag, dil ko jalaaye, shanti ki dhun, door bhagaaye. 🔥😠",
-            "Krodh ka toofan, mann mein utha, sukoon ka sapna, toot gaya sada. ⚡🤬"
-        ],
-        songs: [
-            "Gallan Goodiyaan - Dil Dhadakne Do (hhttps://www.youtube.com/watch?v=jCEdTq3j-0U&list=RDjCEdTq3j-0U&start_radio=1&pp=ygUiR2FsbGFuIEdvb2RpeWFhbiAtIERpbCBEaGFkYWtuZSBEb6AHAQ%3D%3D)",
-            "Malhari - Bajirao Mastani (https://www.youtube.com/watch?v=l_MyUGq7pgs&list=RDl_MyUGq7pgs&start_radio=1&pp=ygUZTWFsaGFyaSAtIEJhamlyYW8gTWFzdGFuaaAHAQ%3D%3D)",
-            "Kamariya - Mitron (https://www.youtube.com/watch?v=MhPNBN9knIk&list=RDMhPNBN9knIk&start_radio=1&pp=ygUSS2FtYXJpeWEgLSBNaXRyb24goAcB)"
-        ]
-    },
-    neutral: {
-        jokes: [
-            "Tomato red kyun hua? Kyun ki salad dressing ko dekh kar sharma gaya! 🍅😐",
-            "Watch se banaye belt ko kya kehte hain? Waist of time - aur woh bhi tick tick karta hai! ⌚😐",
-            "Coffee ne police complaint kyun ki? Kyun ki woh mugged tha, aur uska mug chori ho gaya! ☕😐"
-        ],
-        shayari: [
-            "Sukoon ki dhun, dil mein basi, na khushi na gham, bas yun hi rasi. 😐🌿",
-            "Aram ki lehren, mann ko behlaaye, zindagi ka safar, aaram se jaaye. 🕊️😌"
-        ],
-        songs: [
-            "Kal Ho Naa Ho - Kal Ho Naa Ho (https://www.youtube.com/watch?v=g0eO74UmRBs&list=RDg0eO74UmRBs&start_radio=1&pp=ygUdS2FsIEhvIE5hYSBIbyAtIEthbCBIbyBOYWEgSG-gBwE%3D)",
-            "Tum Se Hi - Jab We Met (https://www.youtube.com/watch?v=mt9xg0mmt28&list=RDmt9xg0mmt28&start_radio=1&pp=ygUWVHVtIFNlIEhpIC0gSmFiIFdlIE1ldKAHAQ%3D%3D)",
-            "Jeene Laga Hoon - Ramaiya Vastavaiya (https://www.youtube.com/watch?v=qpIdoaaPa6U&list=RDqpIdoaaPa6U&start_radio=1&pp=ygUkSmVlbmUgTGFnYSBIb29uIC0gUmFtYWl5YSBWYXN0YXZhaXlhoAcB)"
-        ]
-    },
-    fear: {
-        jokes: [
-            "Ghosts rain se kyun darte hain? Kyun ki woh unki spirits ko dampen kar deti hai! 👻😨",
-            "Ghost ki true love ko kya kehte hain? Ghoul-friend - aur woh bhi spooky! 💀😱",
-            "Ghost party mein kyun gaya? Kyun ki woh boo-last tha! 🎉😰"
-        ],
-        shayari: [
-            "Dar ki raat, andhera ghere, himmat ki roshni, abhi na aaye. 🌑😨",
-            "Bhayaan ke jaal, dil ko bandhe, azadi ka geet, abhi na gaaye. ⚡😱"
-        ],
-        songs: [
-            "Aankhon Ki Gustakhiyan - Hum Dil De Chuke Sanam (https://www.youtube.com/watch?v=7k5gM4ClRRo&list=RD7k5gM4ClRRo&start_radio=1&pp=ygUvQWFua2hvbiBLaSBHdXN0YWtoaXlhbiAtIEh1bSBEaWwgRGUgQ2h1a2UgU2FuYW2gBwHSBwkJAwoBhyohjO8%3D)",
-            "Dil Diyan Gallan - Tiger Zinda Hai (https://www.youtube.com/watch?v=SAcpESN_Fk4&list=RDSAcpESN_Fk4&start_radio=1&pp=ygUiRGlsIERpeWFuIEdhbGxhbiAtIFRpZ2VyIFppbmRhIEhhaaAHAQ%3D%3D)",
-            "Yeh Ishq Hai - Jab We Met (https://www.youtube.com/watch?v=dXpG0kavjUo&list=RDdXpG0kavjUo&start_radio=1&pp=ygUaWWVoIElzaHEgSGFpIC0gSmFiIFdlIE1ldCCgBwE%3D)"
-        ]
-    },
-    surprise: {
-        jokes: [
-            "Student ne homework kyun kha liya? Kyun ki teacher ne kaha tha piece of cake! 📚😲",
-            "Magic show mein kyun gaya? Kyun ki surprise ka intezaar tha, ab toh amazed ho gaya! 🎩😮",
-            "Gift kholte hi kya hua? Surprise ka dhamaal, dil khush ho gaya! 🎁😲"
-        ],
-        shayari: [
-            "Achanak ki chamak, dil ko jagaye, hairat ka rang, naye rang bharaaye. 😲✨",
-            "Wonder ki duniya, nazar aaye, har pal naya, sapna sa laaye. 🌟😮"
-        ],
-        songs: [
-            "Aankh Marey - Simmba (https://www.youtube.com/watch?v=_KhQT-LGb-4&list=RD_KhQT-LGb-4&start_radio=1&pp=ygUVQWFua2ggTWFyZXkgLSBTaW1tYmEgoAcB)",
-            "Tum Se Hi - Jab We Met (https://www.youtube.com/watch?v=Cb6wuzOurPc&list=RDCb6wuzOurPc&start_radio=1&pp=ygUWVHVtIFNlIEhpIC0gSmFiIFdlIE1ldKAHAQ%3D%3D)",
-            "Zingaat - Sairat (https://www.youtube.com/watch?v=2gcsgfzqN8k&list=RD2gcsgfzqN8k&start_radio=1&pp=ygUQWmluZ2FhdCAtIFNhaXJhdKAHAQ%3D%3D)"
-        ]
-    },
-    disgust: {
-        jokes: [
-            "Cookie doctor ke paas kyun gaya? Kyun ki woh crummy feel kar raha tha! 🍪🤢",
-            "Kisi aur ka cheese ko kya kehte hain? Nacho cheese - aur woh bhi stolen! 🧀😖",
-            "Scientists atoms ko trust kyun nahi karte? Kyun ki woh bad smells bhi banate hain! ⚛️🤮"
-        ],
-        shayari: [
-            "Ghin ki hawa, dil ko bhaaye na, saaf raahon ka, ab intezaar karna. 🤢🧼",
-            "Beizzati ki lehar, mann ko sataye, pavitrata ka, geet ab gaaye. 😖💧"
-        ],
-        songs: [
-            "Naatu Naatu - RRR (https://www.youtube.com/watch?v=sAzlWScHTc4&list=RDsAzlWScHTc4&start_radio=1&pp=ygUSTmFhdHUgTmFhdHUgLSBSUlIgoAcB)",
-            "Shake It Off - Taylor Swift (https://www.youtube.com/watch?v=5zHicybHGV0&list=RD5zHicybHGV0&start_radio=1&pp=ygUbU2hha2UgSXQgT2ZmIC0gVGF5bG9yIFN3aWZ0oAcB)",
-            "Socha Hai - Rock On (https://www.youtube.com/watch?v=dnXGxMlV-rU&list=RDdnXGxMlV-rU&start_radio=1&pp=ygUTU29jaGEgSGFpIC0gUm9jayBPbqAHAQ%3D%3DI)"
-        ]
-    }
-};
+
 
 // Event listeners
 document.getElementById('webcam-btn').addEventListener('click', startWebcam);
@@ -392,36 +278,9 @@ function useStaticContent(type, showMessage = true) {
         list.innerHTML = '';
     }
 
-    // Single mood only, as mixed moods are not supported with radio buttons
-    if (content[currentMood] && content[currentMood][type]) {
-        content[currentMood][type].forEach(item => {
-            const li = document.createElement('li');
-            if (type === 'songs' && item.includes('https://')) {
-                const [songName, link] = item.split(' (');
-                const cleanLink = link.replace(')', '');
-                // Extract video ID from YouTube URL
-                const videoIdMatch = cleanLink.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
-                const videoId = videoIdMatch ? videoIdMatch[1] : '';
-                if (videoId) {
-                    li.innerHTML = `
-                        <div style="margin-bottom: 20px;">
-                            <strong>${songName}</strong>
-                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 5px;"></iframe>
-                        </div>
-                    `;
-                } else {
-                    li.textContent = songName;
-                }
-            } else {
-                li.textContent = item;
-            }
-            list.appendChild(li);
-        });
-    } else {
-        const li = document.createElement('li');
-        li.textContent = 'No content available for this mood.';
-        list.appendChild(li);
-    }
+    const li = document.createElement('li');
+    li.textContent = 'No content available at the moment. Please try again later.';
+    list.appendChild(li);
 }
 
 function backToMoodSelection() {
