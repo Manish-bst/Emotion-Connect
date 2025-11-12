@@ -363,6 +363,7 @@ video {
     font-weight: 500;
     transition: transform 0.2s ease;}
 
+    
 .chat-send:hover {
     transform: translateY(-1px);}
 /* Chatbox Toggle Button */
