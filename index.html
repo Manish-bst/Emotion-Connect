@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emotion Connect - Discover Content for Your Mood</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
@@ -81,7 +81,9 @@
             <button id="chatbox-toggle" class="chatbox-toggle">×</button>
         </div>
         <div class="chatbox-body">
-            <div id="chat-messages" class="chat-messages"></div>
+            <div id="chat-messages" class="chat-messages">
+                <button id="load-more" class="load-more-btn" style="display: none;">Load More</button>
+            </div>
             <div class="chat-input-container">
                 <input type="text" id="chat-input" placeholder="Type your message..." class="chat-input">
                 <button id="chat-send" class="chat-send">Send</button>
@@ -89,6 +91,6 @@
         </div>
     </div>
 
-    <script src="/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
