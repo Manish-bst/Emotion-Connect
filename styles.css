@@ -4,7 +4,6 @@
     padding: 0;
     box-sizing: border-box;}
 
-    
 body {
     font-family: 'Inter', sans-serif;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%), 
@@ -263,7 +262,7 @@ video {
     bottom: 20px;
     right: 20px;
     width: 350px;
-    height: 500px;
+    height: 550px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -305,15 +304,43 @@ video {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 0;}
+    padding: 0;
+    height: 100%;}
 
 .chat-messages {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
-    padding: 15px;
+    overflow-x: hidden;
+    padding: 15px 15px 5px;
     display: flex;
     flex-direction: column;
     gap: 10px;}
+
+/* Custom scrollbar for chat-messages */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Firefox scrollbar */
+.chat-messages {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1;
+}
 
 .chat-message {
     max-width: 80%;
@@ -321,7 +348,9 @@ video {
     border-radius: 18px;
     font-size: 14px;
     line-height: 1.4;
-    word-wrap: break-word;}
+    word-break: break-word;
+    hyphens: auto;
+    white-space: pre-wrap;}
 
 .chat-message.user {
     align-self: flex-end;
@@ -335,6 +364,7 @@ video {
 
 .chat-input-container {
     display: flex;
+    flex-shrink: 0;
     padding: 15px;
     border-top: 1px solid #e0e0e0;
     background: white;
@@ -363,9 +393,27 @@ video {
     font-weight: 500;
     transition: transform 0.2s ease;}
 
-    
 .chat-send:hover {
     transform: translateY(-1px);}
+
+.load-more-btn {
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0 auto 10px;
+    display: block;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);}
+
+.load-more-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);}
+
 /* Chatbox Toggle Button */
 #chatbox-toggle-btn {
     position: fixed;
@@ -408,7 +456,8 @@ video {
 
     .chatbox {
         width: calc(100vw - 40px);
-        height: 400px;
+        height: 450px;
         bottom: 10px;
         right: 10px;}
 }
+
