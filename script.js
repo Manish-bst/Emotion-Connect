@@ -133,6 +133,21 @@ document.getElementById('back-btn').addEventListener('click', backToMoodSelectio
 document.getElementById('back-to-home').addEventListener('click', backToHome);
 document.getElementById('back-to-home-rec').addEventListener('click', backToHome);
 
+document.getElementById('submit-username').addEventListener('click', handleUsernameSubmit);
+
+function handleUsernameSubmit() {
+    const usernameInput = document.getElementById('username-input');
+    const username = usernameInput.value.trim();
+    if (username === '') {
+        alert('Please enter your username.');
+        return;
+    }
+    localStorage.setItem('username', username);
+    document.getElementById('username-container').style.display = 'none';
+    document.querySelector('.container').style.display = 'block';
+    usernameInput.value = ''; // Clear input
+}
+
 // Content buttons
 document.querySelectorAll('.content-btn').forEach(btn => {
     btn.addEventListener('click', (e) => showRecommendations(e.target.dataset.type));
