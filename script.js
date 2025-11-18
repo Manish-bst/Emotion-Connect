@@ -500,7 +500,8 @@ function renderMessages(autoScroll = true) {
     // Show/hide load more button
     if (chatHistory.length > messagesToShow) {
         loadMoreBtn.style.display = 'block';
-    } else {
+    } 
+    else {
         loadMoreBtn.style.display = 'none';
     }
 
