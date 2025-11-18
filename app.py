@@ -45,7 +45,6 @@ def save_chat():
 
         if not username or not messages:
             return jsonify({'error': 'Username and messages required'}), 400
-
         chats_file = 'chats.json'
         if os.path.exists(chats_file):
             with open(chats_file, 'r', encoding='utf-8') as f:
