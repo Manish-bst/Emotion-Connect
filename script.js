@@ -2,8 +2,7 @@ let currentMood = '';
 let lastDetectedMood = '';
 let detectionInterval = null;
 let modelsLoaded = false;
-let chatHistory = [];
-let messagesToShow = 20;
+let userName = '';
 
 // Static content fallback (enhanced relatable content with valid links)
 const content = {
@@ -121,7 +120,21 @@ const content = {
     }
 };
 
+// Check if name is already stored
+window.addEventListener('load', () => {
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+        userName = storedName;
+        document.getElementById('name-input').style.display = 'none';
+        document.getElementById('container').style.display = 'block';
+        document.getElementById('greeting-name').textContent = userName;
+    }
+    // Ensure chatbox is visible by default
+    document.getElementById('chatbox').style.display = 'flex';
+});
+
 // Event listeners
+document.getElementById('submit-name').addEventListener('click', handleNameInput);
 document.getElementById('webcam-btn').addEventListener('click', startWebcam);
 document.getElementById('upload-btn').addEventListener('click', () => document.getElementById('file-input').click());
 document.getElementById('file-input').addEventListener('change', handleFileUpload);
@@ -132,21 +145,6 @@ document.getElementById('capture-btn').addEventListener('click', captureImage);
 document.getElementById('back-btn').addEventListener('click', backToMoodSelection);
 document.getElementById('back-to-home').addEventListener('click', backToHome);
 document.getElementById('back-to-home-rec').addEventListener('click', backToHome);
-
-document.getElementById('submit-username').addEventListener('click', handleUsernameSubmit);
-
-function handleUsernameSubmit() {
-    const usernameInput = document.getElementById('username-input');
-    const username = usernameInput.value.trim();
-    if (username === '') {
-        alert('Please enter your username.');
-        return;
-    }
-    localStorage.setItem('username', username);
-    document.getElementById('username-container').style.display = 'none';
-    document.querySelector('.container').style.display = 'block';
-    usernameInput.value = ''; // Clear input
-}
 
 // Content buttons
 document.querySelectorAll('.content-btn').forEach(btn => {
@@ -162,7 +160,6 @@ document.getElementById('chat-input').addEventListener('keypress', (e) => {
         sendChatMessage();
     }
 });
-document.getElementById('load-more').addEventListener('click', loadMoreMessages);
 
 function startWebcam() {
     document.querySelector('.options').style.display = 'none';
@@ -352,16 +349,6 @@ function showMoodDisplay() {
     moodText = currentMood.charAt(0).toUpperCase() + currentMood.slice(1);
     document.getElementById('detected-mood').innerHTML = emoji + ' ' + moodText;
 
-    // Clear chat history for new mood
-    chatHistory = [];
-    messagesToShow = 20;
-
-    // If chatbox is open, update greeting
-    const chatbox = document.getElementById('chatbox');
-    if (chatbox.style.display === 'flex') {
-        addMessage(`Hi! I see you're feeling ${currentMood}. How can I help you today?`, 'bot');
-    }
-
     document.getElementById('mood-display').style.display = 'block';
 }
 
@@ -469,59 +456,21 @@ function toggleChatbox() {
     } else {
         chatbox.style.display = 'flex';
         toggleBtn.textContent = '✕';
-        if (chatHistory.length === 0 && currentMood) {
+        if (document.getElementById('chat-messages').children.length === 0 && currentMood) {
             addMessage(`Hi! I see you're feeling ${currentMood}. How can I help you today?`, 'bot');
-        } else if (chatHistory.length === 0) {
+        } else if (document.getElementById('chat-messages').children.length === 0) {
             addMessage('Hi! Detect your mood first or select manually to chat about your emotions.', 'bot');
         }
-        renderMessages(true); // Ensure messages are rendered and scrolled to bottom when opening
     }
 }
 
 function addMessage(text, sender) {
-    const messagesContainer = document.getElementById('chat-messages');
-    const isNearBottom = messagesContainer.scrollTop + messagesContainer.clientHeight >= messagesContainer.scrollHeight - 100;
-    chatHistory.push({ text, sender });
-    renderMessages(isNearBottom);
-}
-
-function renderMessages(autoScroll = true) {
-    const messagesContainer = document.getElementById('chat-messages');
-    const loadMoreBtn = document.getElementById('load-more');
-
-    // Clear existing messages except the load more button
-    const existingMessages = messagesContainer.querySelectorAll('.chat-message');
-    existingMessages.forEach(msg => msg.remove());
-
-    // Determine which messages to show (last N messages)
-    const startIndex = Math.max(0, chatHistory.length - messagesToShow);
-    const messagesToRender = chatHistory.slice(startIndex);
-
-    // Show/hide load more button
-    if (chatHistory.length > messagesToShow) {
-        loadMoreBtn.style.display = 'block';
-    } 
-    else {
-        loadMoreBtn.style.display = 'none';
-    }
-
-    // Render only the sliced messages
-    messagesToRender.forEach(msg => {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('chat-message', msg.sender);
-        messageDiv.textContent = msg.text;
-        messagesContainer.appendChild(messageDiv);
-    });
-
-    // Scroll to bottom only if autoScroll is true
-    if (autoScroll) {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-}
-
-function loadMoreMessages() {
-    messagesToShow += 10; // Load 10 more messages
-    renderMessages(true); // Always scroll to bottom when loading more
+    const messages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message', sender);
+    messageDiv.textContent = text;
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
 }
 
 function sendChatMessage() {
@@ -578,4 +527,18 @@ function backToHome() {
     modelsLoaded = false;
     currentMood = '';
     lastDetectedMood = '';
+}
+
+function handleNameInput() {
+    const nameInput = document.getElementById('user-name');
+    const name = nameInput.value.trim();
+    if (!name) {
+        alert('Please enter your name.');
+        return;
+    }
+    userName = name;
+    localStorage.setItem('userName', userName);
+    document.getElementById('name-input').style.display = 'none';
+    document.getElementById('container').style.display = 'block';
+    document.getElementById('greeting-name').textContent = userName;
 }
