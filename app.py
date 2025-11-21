@@ -31,6 +31,7 @@ def manish_img():
 def mayank_img():
     return send_from_directory('..', 'Mayank.jpg')
 
+
 # Mood detection endpoint
 @app.route('/detect_mood', methods=['POST'])
 def detect_mood():
