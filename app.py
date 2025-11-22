@@ -8,7 +8,7 @@ import openai
 app = Flask(__name__)
 
 # Set OpenAI API key (hardcoded for functionality; consider using environment variable in production)
-openai.api_key = "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"
+openai.api_key = "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"
 
 # Serve static files
 @app.route('/')
