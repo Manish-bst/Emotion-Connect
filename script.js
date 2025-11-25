@@ -7,7 +7,6 @@ let userName = '';
 // Static content fallback (enhanced relatable content with valid links)
 const content = {
     happy: {
-        
         jokes: [
             "Why don't scientists trust atoms? Kyun ki woh sab kuch banate hain, lekin kabhi credit nahi lete! 😄🔬",
             "Mera computer break mang raha tha, toh maine Kit-Kat di - ab woh mujhe chocolates bhej raha hai! 😂💻",
