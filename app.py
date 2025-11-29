@@ -14,6 +14,7 @@ openai.api_key = "my key"
 def index():
     return send_from_directory('.', 'index.html')
 
+
 @app.route('/styles.css')
 def css():
     return send_from_directory('.', 'styles.css')
