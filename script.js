@@ -650,7 +650,6 @@ function backToHome() {
         clearInterval(detectionInterval);
         detectionInterval = null;
     }
-    
     const overlay = document.getElementById('overlay');
     const ctx = overlay.getContext('2d');
     ctx.clearRect(0, 0, overlay.width, overlay.height);
