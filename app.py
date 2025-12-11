@@ -241,7 +241,6 @@ def chat():
             max_tokens=150,
             temperature=0.7
         )
-
         bot_response = response.choices[0].message.content.strip()
         return jsonify({'response': bot_response})
     except Exception as e:
