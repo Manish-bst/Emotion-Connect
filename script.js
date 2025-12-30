@@ -246,10 +246,14 @@ function captureImage() {
 function handleFileUpload(event) {
     const file = event.target.files[0];
     if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File too large. Please select an image smaller than 5MB.');
+            return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
             const imageData = e.target.result;
-            
+
             // Send to backend for mood detection
             fetch('/detect_mood', {
                 method: 'POST',
@@ -270,6 +274,9 @@ function handleFileUpload(event) {
             .catch(err => {
                 alert('Error: ' + err.message);
             });
+        };
+        reader.onerror = function() {
+            alert('Failed to read the file.');
         };
         reader.readAsDataURL(file);
     }
