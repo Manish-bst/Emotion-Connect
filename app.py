@@ -139,40 +139,67 @@ def load_chat():
 # Mood detection endpoint
 @app.route('/detect_mood', methods=['POST'])
 def detect_mood():
-    detected_mood = 'neutral'
     try:
         logger.info("Received mood detection request.")
         data = request.json
         image_data = data.get('image')
         if not image_data:
             logger.warning("No image data provided in request.")
-            return jsonify({'mood': detected_mood})
+            return jsonify({'error': 'No image data provided'}), 400
 
         # Decode base64 image
-        header, encoded = image_data.split(",", 1)
-        image_bytes = base64.b64decode(encoded)
-        np_arr = np.frombuffer(image_bytes, np.uint8)
-        img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        try:
+            header, encoded = image_data.split(",", 1)
+            image_bytes = base64.b64decode(encoded)
+        except Exception as e:
+            logger.error(f"Base64 decode error: {e}")
+            return jsonify({'error': 'Invalid image data'}), 400
+
+        # Check approximate file size (base64 is ~4/3 of original)
+        if len(image_bytes) > 7 * 1024 * 1024:  # ~5MB original
+            logger.warning("Image too large.")
+            return jsonify({'error': 'Image too large. Please use an image smaller than 5MB.'}), 400
+
+        try:
+            np_arr = np.frombuffer(image_bytes, np.uint8)
+            img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        except Exception as e:
+            logger.error(f"Image decode error: {e}")
+            return jsonify({'error': 'Invalid image format'}), 400
 
         if img is None:
             logger.warning("Invalid image data provided.")
-            return jsonify({'mood': detected_mood})
+            return jsonify({'error': 'Invalid image format'}), 400
 
-        logger.info("Image decoded successfully. Analyzing emotions with DeepFace...")
+        # Resize image to reduce memory usage
+        height, width = img.shape[:2]
+        if width > 640 or height > 480:
+            aspect_ratio = width / height
+            if aspect_ratio > 1:
+                new_width = 640
+                new_height = int(640 / aspect_ratio)
+            else:
+                new_height = 480
+                new_width = int(480 * aspect_ratio)
+            img = cv2.resize(img, (new_width, new_height))
+
+        logger.info("Image decoded and resized successfully. Analyzing emotions with DeepFace...")
 
         try:
             result = DeepFace.analyze(img, actions=['emotion'], enforce_detection=False)
-            if result:
+            if result and len(result) > 0:
                 detected_mood = result[0]['dominant_emotion']
                 logger.info(f"Detected mood: {detected_mood}")
+                return jsonify({'mood': detected_mood})
             else:
                 logger.warning("No face detected in the image.")
+                return jsonify({'error': 'No face detected in the image'}), 400
         except Exception as e:
             logger.error(f"DeepFace error: {e}")
+            return jsonify({'error': 'Failed to analyze image. Please try again.'}), 500
     except Exception as e:
         logger.error(f"Unexpected error in detect_mood: {str(e)}")
-
-    return jsonify({'mood': detected_mood})
+        return jsonify({'error': 'Internal server error'}), 500
 
 # Content generation endpoint
 @app.route('/generate_content', methods=['POST'])
