@@ -1,0 +1,47 @@
+{
+  "users": {
+    "manish": [
+      {
+        "mood": "happy",
+        "date": "2025-12-30T19:39:02.845675",
+        "messages": [
+          {
+            "text": "Hi! I see you're feeling happy. How can I help you today?",
+            "sender": "bot",
+            "timestamp": "2025-12-30T14:08:42.307Z"
+          },
+          {
+            "sender": "user",
+            "text": "hello",
+            "timestamp": "2025-12-30T14:09:02.753Z"
+          },
+          {
+            "sender": "bot",
+            "text": "Sorry, I encountered an error. Try again!",
+            "timestamp": "2025-12-30T14:09:02.796Z"
+          }
+        ]
+      },
+      {
+        "mood": "surprise",
+        "date": "2025-12-30T19:48:49.203099",
+        "messages": [
+          {
+            "text": "Hi! I see you're feeling surprise. How can I help you today?",
+            "sender": "bot",
+            "timestamp": "2025-12-30T14:18:42.485Z"
+          },
+          {
+            "sender": "user",
+            "text": "how are you",
+            "timestamp": "2025-12-30T14:18:49.140Z"
+          }
+        ]
+      }
+    ]
+  }
+}    ]
+      }
+    ]
+  }
+}
