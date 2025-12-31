@@ -15,7 +15,6 @@ from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__)
-
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
