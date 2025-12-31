@@ -653,7 +653,6 @@ function backToHome() {
         video.srcObject.getTracks().forEach(track => track.stop());
         video.srcObject = null;
     }
-    
     if (detectionInterval) {
         clearInterval(detectionInterval);
         detectionInterval = null;
