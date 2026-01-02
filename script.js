@@ -638,6 +638,7 @@ function sendChatMessage() {
         console.error('Chat error:', err);
     });
 }
+
 function backToHome() {
     document.getElementById('mood-display').style.display = 'none';
     document.getElementById('recommendations').style.display = 'none';
